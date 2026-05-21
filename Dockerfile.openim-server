@@ -1,0 +1,27 @@
+FROM golang:1.25-alpine AS builder
+
+ENV SERVER_DIR=/openim-server
+WORKDIR $SERVER_DIR
+
+RUN apk add --no-cache bash
+
+COPY open-im-server/ .
+
+RUN go mod download
+RUN go install github.com/magefile/mage@v1.15.0
+RUN mage build
+RUN mage -compile /tmp/openim-mage
+
+FROM golang:1.25-alpine
+
+RUN apk add --no-cache bash
+
+ENV SERVER_DIR=/openim-server
+WORKDIR $SERVER_DIR
+
+COPY --from=builder $SERVER_DIR/_output $SERVER_DIR/_output
+COPY --from=builder $SERVER_DIR/config $SERVER_DIR/config
+COPY --from=builder /tmp/openim-mage /usr/local/bin/openim-mage
+COPY --from=builder $SERVER_DIR/start-config.yml $SERVER_DIR/
+
+ENTRYPOINT ["sh", "-c", "openim-mage start && tail -f /dev/null"]

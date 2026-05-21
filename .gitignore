@@ -1,0 +1,12 @@
+# Sub-repos — each has its own git
+im-business/
+openim-flutter-app/
+open-im-server/
+openim-sdk-core/
+
+# Claude workspace settings (local only)
+.claude/
+
+# Local env (machine-specific)
+.env
+env.json

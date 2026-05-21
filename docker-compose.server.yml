@@ -1,0 +1,25 @@
+networks:
+  openim:
+    external: true
+    name: open-im-server_openim
+
+services:
+  openim-server:
+    build:
+      context: .
+      dockerfile: Dockerfile.openim-server
+    image: openim-server:local
+    container_name: openim-server
+    restart: always
+    ports:
+      - "10001:10001"   # WebSocket (SDK)
+      - "10002:10002"   # HTTP API
+    volumes:
+      - ./open-im-server/config:/openim-server/config
+      - ./openim-server-config/mongodb.yml:/openim-server/config/mongodb.yml
+      - ./openim-server-config/redis.yml:/openim-server/config/redis.yml
+      - ./openim-server-config/kafka.yml:/openim-server/config/kafka.yml
+      - ./openim-server-config/minio.yml:/openim-server/config/minio.yml
+      - ./openim-server-config/discovery.yml:/openim-server/config/discovery.yml
+    networks:
+      - openim
