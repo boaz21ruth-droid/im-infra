@@ -1,0 +1,40 @@
+<h2>群文件库 — 存储方案</h2>
+<p class="subtitle">文件从哪里来？从哪里查？</p>
+
+<div class="options">
+  <div class="option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>聚合已有文件消息（最轻）</h3>
+      <p>群文件页 = 搜索历史消息中 <code>contentType == file(43)</code> 的消息，列表展示。上传就是在聊天里发文件，群文件页只是过滤视图。</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>优点</h4><ul><li>零后端改动</li><li>文件随消息撤回自然删除</li></ul></div>
+        <div class="cons"><h4>缺点</h4><ul><li>文件历史受消息保留期限制</li><li>无法单独删文件</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>自定义消息 type 914（推荐）</h3>
+      <p>发文件走 <code>createCustomMessage(type=914)</code>，payload 含 url/name/size/uploader；群文件页搜索 type=914 消息并渲染列表。文件本身走 OpenIM 自带 OSS 上传。</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>优点</h4><ul><li>零后端改动</li><li>文件气泡与普通文件消息区分，可单独处理</li><li>扩展字段灵活（缩略图、到期时间等）</li></ul></div>
+        <div class="cons"><h4>缺点</h4><ul><li>依赖 OpenIM 消息历史（搜索 API）</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="c" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>im-business 后端存储文件记录</h3>
+      <p>新增 <code>group_files</code> 表，im-business 提供上传/列表/删除 API；Flutter 调用 REST，不走消息通道。</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>优点</h4><ul><li>独立管理，可分页/权限控制</li></ul></div>
+        <div class="cons"><h4>缺点</h4><ul><li>需要改后端 + 数据库迁移</li><li>文件不出现在聊天记录里</li></ul></div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,33 @@
+<h2>群聊增强 — 第二批功能</h2>
+<p class="subtitle">三个独立模块，逐一确认设计范围</p>
+
+<div class="cards">
+  <div class="card" data-choice="admin" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#EFF6FF;display:flex;align-items:center;justify-content:center;height:100px;font-size:36px">👑</div>
+    <div class="card-body">
+      <h3>① 管理员权限 UI</h3>
+      <p>群主在"群管理"页设置/撤销管理员；管理员可禁言成员；成员列表显示角色徽章</p>
+      <p style="color:#6B7280;font-size:12px;margin-top:8px">纯 Flutter 前端 · 调用 OpenIM SDK setGroupMemberRole / muteGroupMember</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="files" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#F0FDF4;display:flex;align-items:center;justify-content:center;height:100px;font-size:36px">📁</div>
+    <div class="card-body">
+      <h3>② 群文件库</h3>
+      <p>群成员上传文件；群设置页入口"群文件"；文件列表 + 下载；上传走自定义消息 type 914</p>
+      <p style="color:#6B7280;font-size:12px;margin-top:8px">Flutter 前端 + 历史消息检索 · 无需后端改动</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="vote" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#FFF7ED;display:flex;align-items:center;justify-content:center;height:100px;font-size:36px">🗳️</div>
+    <div class="card-body">
+      <h3>③ 投票</h3>
+      <p>发起人在输入框菜单创建投票（标题 + 选项）；chat 气泡展示选项 + 实时票数；每人限投一次</p>
+      <p style="color:#6B7280;font-size:12px;margin-top:8px">自定义消息 type 909（poll）· 投票结果通过自定义消息回传更新</p>
+    </div>
+  </div>
+</div>
+
+<p style="margin-top:16px;color:#374151">点击选中你想深入讨论的功能，或直接在终端告知</p>

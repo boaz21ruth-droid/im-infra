@@ -1,7 +1,7 @@
 # 群聊增强第二批 — 设计规格
 
 **日期：** 2026-05-21  
-**范围：** openim-flutter-app（纯前端）  
+**范围：** im-wallet-app（纯前端）  
 **不涉及：** im-business 后端、open-im-server、openim-sdk-core
 
 ---

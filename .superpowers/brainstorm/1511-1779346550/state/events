@@ -1,0 +1,1 @@
+{"type":"click","text":"A\n    \n      编辑原消息（推荐）\n      投票时调用 OpenIM editMessage 修改原 type-909 消息的 data（在对应选项的 voterIDs[] 中追加自己），所有端收到 messageEdited 事件后重渲染气泡。\n      \n        优点无额外消息，聊天记录干净单一事实来源，不会分叉已有 editEvent 基础设施（type 908）\n        缺点并发投票理论上可能覆盖（极低概率，群聊可接受）","choice":"a","id":null,"timestamp":1779348356030}

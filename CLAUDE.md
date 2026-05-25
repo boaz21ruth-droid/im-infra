@@ -5,7 +5,7 @@
 ```
 /Users/web1/go/im/
 ├── im-business/             ← our Go backend (primary work area) — see im-business/CLAUDE.md
-├── openim-flutter-app/      ← our Flutter client app             — see openim-flutter-app/CLAUDE.md
+├── im-wallet-app/           ← our Flutter client app             — see im-wallet-app/CLAUDE.md
 ├── open-im-server/          ← upstream OpenIM server, DO NOT MODIFY
 └── openim-sdk-core/         ← upstream SDK core,    DO NOT MODIFY
 ```

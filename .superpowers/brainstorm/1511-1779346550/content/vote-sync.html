@@ -1,0 +1,28 @@
+<h2>投票 — 结果同步方案</h2>
+<p class="subtitle">其他成员如何看到最新票数？</p>
+
+<div class="options">
+  <div class="option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>编辑原消息（推荐）</h3>
+      <p>投票时调用 OpenIM <code>editMessage</code> 修改原 type-909 消息的 data（在对应选项的 <code>voterIDs[]</code> 中追加自己），所有端收到 <code>messageEdited</code> 事件后重渲染气泡。</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>优点</h4><ul><li>无额外消息，聊天记录干净</li><li>单一事实来源，不会分叉</li><li>已有 editEvent 基础设施（type 908）</li></ul></div>
+        <div class="cons"><h4>缺点</h4><ul><li>并发投票理论上可能覆盖（极低概率，群聊可接受）</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>独立投票消息 type 910</h3>
+      <p>每次投票发一条 <code>type=910 {pollID, optionIdx, voterID}</code> 消息；投票气泡实时监听同 conversation 中所有 type-910 消息并聚合票数显示。</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>优点</h4><ul><li>无并发冲突</li><li>可审计每一票</li></ul></div>
+        <div class="cons"><h4>缺点</h4><ul><li>聊天记录出现大量投票事件消息</li><li>需要在气泡层做实时聚合（复杂）</li></ul></div>
+      </div>
+    </div>
+  </div>
+</div>
