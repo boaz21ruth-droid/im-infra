@@ -22,13 +22,10 @@ sed "s|\${HOST_IP}|${HOST_IP}|g" \
   > "$DIR/openim-server-config/minio.yml"
 echo "✓ openim-server-config/minio.yml"
 
-# 2. Flutter env.json (for --dart-define-from-file)
-cat > "$DIR/env.json" <<EOF
-{
-  "HOST_IP": "${HOST_IP}"
-}
-EOF
-echo "✓ env.json"
+# 2. Patch _host in config.dart (compiled into app — no dart-define needed)
+CONFIG_DART="$DIR/im-wallet-app/openim_common/lib/src/config.dart"
+sed -i '' "s|static const _host = '.*';|static const _host = '${HOST_IP}';|" "$CONFIG_DART"
+echo "✓ config.dart _host = $HOST_IP"
 
 # 3. Restart openim-server
 docker restart openim-server
@@ -36,4 +33,4 @@ echo "✓ openim-server restarted"
 
 echo ""
 echo "Run Flutter:"
-echo "  fvm flutter run --dart-define-from-file=$DIR/env.json -d <device-id>"
+echo "  fvm flutter run -d <device-id>"

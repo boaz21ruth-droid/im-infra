@@ -4,6 +4,19 @@ networks:
     name: open-im-server_openim
 
 services:
+  caddy:
+    image: caddy:2-alpine
+    container_name: caddy
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+    networks:
+      - openim
+    depends_on:
+      - openim-server
+
   openim-server:
     build:
       context: .

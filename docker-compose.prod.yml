@@ -1,0 +1,86 @@
+# EC2 production — start AFTER: cd open-im-server && docker compose up -d
+# Usage: docker compose -f docker-compose.prod.yml up -d
+#
+# Required env vars (put in .env.prod, loaded via --env-file):
+#   REGISTRY=your-registry          e.g. yourname or 123456789.dkr.ecr.us-east-1.amazonaws.com/im
+#   TAG=latest
+#   DOMAIN=api.yourdomain.com       Caddy auto-issues TLS cert for this domain
+#   POSTGRES_PASSWORD=<strong-password>
+
+networks:
+  openim:
+    external: true
+    name: open-im-server_openim
+
+volumes:
+  postgres-business-data:
+  caddy_data:
+  caddy_config:
+
+services:
+  postgres-business:
+    image: postgres:16-alpine
+    container_name: postgres-business
+    environment:
+      POSTGRES_DB: im_business
+      POSTGRES_USER: im_business
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-im_business123}
+    volumes:
+      - postgres-business-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U im_business"]
+      interval: 5s
+      retries: 5
+    restart: always
+    networks:
+      - openim
+
+  im-business:
+    image: ${REGISTRY}/im-business:${TAG:-latest}
+    container_name: im-business
+    command: ["-config", "config/config.yaml"]
+    volumes:
+      - ./im-business/config/docker.config.yaml:/app/config/config.yaml:ro
+    depends_on:
+      postgres-business:
+        condition: service_healthy
+    restart: always
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
+    networks:
+      - openim
+
+  openim-server:
+    image: ${REGISTRY}/openim-server:${TAG:-latest}
+    container_name: openim-server
+    volumes:
+      - ./open-im-server/config:/openim-server/config
+      - ./openim-server-config/mongodb.yml:/openim-server/config/mongodb.yml
+      - ./openim-server-config/redis.yml:/openim-server/config/redis.yml
+      - ./openim-server-config/kafka.yml:/openim-server/config/kafka.yml
+      - ./openim-server-config/minio.yml:/openim-server/config/minio.yml
+      - ./openim-server-config/discovery.yml:/openim-server/config/discovery.yml
+    restart: always
+    networks:
+      - openim
+
+  caddy:
+    image: caddy:2-alpine
+    container_name: caddy
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./Caddyfile.prod:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    environment:
+      - CADDY_DOMAIN=${DOMAIN}
+    networks:
+      - openim
+    depends_on:
+      - openim-server
+      - im-business

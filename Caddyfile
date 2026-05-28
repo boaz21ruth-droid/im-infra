@@ -1,0 +1,19 @@
+# Local dev — HTTP only, no TLS
+:80 {
+	log {
+		output stdout
+		format console
+		level INFO
+	}
+
+	handle /msg_gateway {
+		reverse_proxy openim-server:10001
+	}
+	handle_path /api/* {
+		reverse_proxy openim-server:10002
+	}
+	handle /chat/* {
+		uri strip_prefix /chat
+		reverse_proxy im-business:10008
+	}
+}

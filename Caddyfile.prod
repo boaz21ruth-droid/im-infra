@@ -1,0 +1,14 @@
+# Production — auto HTTPS via Let's Encrypt
+# Set CADDY_DOMAIN env var to your domain (e.g. api.yourdomain.com)
+{$CADDY_DOMAIN} {
+	handle /msg_gateway {
+		reverse_proxy openim-server:10001
+	}
+	handle /api/* {
+		reverse_proxy openim-server:10002
+	}
+	handle /chat/* {
+		uri strip_prefix /chat
+		reverse_proxy im-business:10008
+	}
+}
